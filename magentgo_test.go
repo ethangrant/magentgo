@@ -96,3 +96,45 @@ func TestSetBaseUrl(t *testing.T) {
 		})
 	}
 }
+
+func TestSetApiBaseUrl(t *testing.T) {
+	tests := []struct{
+		name string
+		client *Client
+		expectedUrl string
+	} {
+		{
+			name: "valid base url",
+			client: &Client{
+				client:      &http.Client{},
+				baseUrl:     "https://magento2store.co.uk/",
+				bearerToken: "somebearertoken",
+				version:     1,
+				storeCode: "all",
+			},
+			expectedUrl: "https://magento2store.co.uk/rest/all/V1/",
+		},
+		{
+			name: "base url custom store code",
+			client: &Client{
+				client:      &http.Client{},
+				baseUrl:     "https://www.magento2store.co.uk/",
+				bearerToken: "somebearertoken",
+				version:     1,
+				storeCode: "uk",
+			},
+			expectedUrl: "https://www.magento2store.co.uk/rest/uk/V1/",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.client.setApiBaseUrl()
+			url := tt.client.apiBaseUrl
+
+			if url != tt.expectedUrl {
+				t.Errorf("expected url %s, got %s", tt.expectedUrl, url)
+			}
+		})
+	}
+}

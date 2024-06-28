@@ -16,6 +16,12 @@ func WithBearerToken(token string) OptionFunc {
 	}
 }
 
+func WithStoreCode(storeCode string) OptionFunc {
+	return func(c *Client) error {
+		return c.setStoreCode(storeCode)
+	}
+}
+
 // set api version number for all requests
 func WithVersion(version int) OptionFunc {
 	return func(c *Client) error {

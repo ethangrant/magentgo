@@ -2,17 +2,19 @@ package magentgo
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 )
 
 type Client struct {
+	apiBaseUrl string
 	client                 *http.Client
 	clientConfigValidators []ClientConfigValidationFunc
-
 	baseUrl     string
 	bearerToken string
-
+	// defaults to 
+	storeCode string
 	// defaults to 1
 	version int
 }
@@ -23,6 +25,7 @@ func New(options ...OptionFunc) (*Client, error) {
 		client:      &http.Client{},
 		baseUrl:     "",
 		bearerToken: "",
+		storeCode: "",
 		version:     1,
 	}
 
@@ -59,6 +62,20 @@ func (c *Client) validate() error {
 	return nil
 }
 
+// build base url used for all requests
+func (c *Client) setApiBaseUrl() *Client {
+	apiType := "rest/"
+	storeCode := ""
+	if c.storeCode != "" {
+		storeCode = c.storeCode + "/"
+	}
+	version := fmt.Sprintf("V%d/", c.version)
+
+	c.apiBaseUrl = c.baseUrl + apiType + storeCode + version
+
+	return c
+}
+
 // configure base url
 func (c *Client) setBaseUrl(url string) error {
 	if !strings.HasSuffix(url, "/") {
@@ -81,6 +98,13 @@ func (c *Client) setBearerToken(token string) error {
 	}
 
 	c.bearerToken = token
+
+	return nil
+}
+
+// set store code in API url
+func (c *Client) setStoreCode(storeCode string) error {
+	c.storeCode = storeCode
 
 	return nil
 }
