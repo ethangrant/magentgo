@@ -23,6 +23,7 @@ type Client struct {
 	version int
 
 	AuthService *AuthService
+	ProductService *ProductService
 }
 
 // create a new instance of api client, function options for configuration
@@ -34,8 +35,6 @@ func New(options ...OptionFunc) (*Client, error) {
 		storeCode: "",
 		version:     1,
 	}
-
-	client.assignServices()
 
 	// option validation files just return an error
 	for _, option := range options {
@@ -50,11 +49,15 @@ func New(options ...OptionFunc) (*Client, error) {
 		return nil, err
 	}
 
+	client.setApiBaseUrl()
+	client.assignServices()
+
 	return client, nil
 }
 
 func (c *Client) assignServices() {
 	c.AuthService = &AuthService{client: c}
+	c.ProductService = &ProductService{client: c}
 }
 
 func (c *Client) validate() error {
@@ -128,9 +131,11 @@ func (c *Client) setVersion(version int) error {
 	return nil
 }
 
-// make http request from the client. Typically called from services but can be called directly
-func (c *Client) call(endpoint string, httpVerb string, bodyType interface{}, responseType interface{}, ctx context.Context) (interface{}, error) {
+// make http request from the client. Attempts to marshal against type struct, returns raw result as byte slice
+func (c *Client) call(endpoint string, httpVerb string, bodyType interface{}, responseType interface{}, ctx context.Context) ([]byte, error) {
 	requestUrl := fmt.Sprintf("%s%s", c.apiBaseUrl, endpoint)
+
+	fmt.Println(requestUrl)
 
 	marshalled, err := json.Marshal(&bodyType)
 	if err != nil {
@@ -158,8 +163,8 @@ func (c *Client) call(endpoint string, httpVerb string, bodyType interface{}, re
 
 	err = json.Unmarshal(body, responseType)
 	if err != nil {
-		return nil, err
+		return body, err
 	}
 
-	return responseType, nil
+	return body, nil
 }
