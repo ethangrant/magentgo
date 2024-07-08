@@ -13,7 +13,7 @@ type AuthPost struct {
 	ErrorResponse
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Otp string `json:"otp"`
+	Otp      string `json:"otp"`
 }
 
 // auth endpoints respond with "string"
@@ -25,8 +25,8 @@ type AuthResponseWithError struct {
 	Token string
 }
 
-func (a *AuthService) AuthToken (endpoint string, username string, password string, ctx context.Context) (AuthResponseWithError, error) {
-	var authRes AuthResponse = "";
+func (a *AuthService) AuthToken(endpoint string, username string, password string, ctx context.Context) (AuthResponseWithError, error) {
+	var authRes AuthResponse = ""
 	authResponseWithError := &AuthResponseWithError{}
 
 	authPost := AuthPost{Username: username, Password: password}
@@ -48,7 +48,7 @@ func (a *AuthService) AuthToken (endpoint string, username string, password stri
 }
 
 // request token with admin credentials
-func (a *AuthService) AdminToken (username string, password string, ctx context.Context) (AuthResponseWithError, error) {
+func (a *AuthService) AdminToken(username string, password string, ctx context.Context) (AuthResponseWithError, error) {
 	res, err := a.AuthToken("integration/admin/token", username, password, ctx)
 	if err != nil {
 		return res, err
@@ -58,7 +58,7 @@ func (a *AuthService) AdminToken (username string, password string, ctx context.
 }
 
 // request token with customer credentials
-func (a *AuthService) CustomerToken (username string, password string, ctx context.Context) (AuthResponseWithError, error) {
+func (a *AuthService) CustomerToken(username string, password string, ctx context.Context) (AuthResponseWithError, error) {
 	res, err := a.AuthToken("integration/customer/token", username, password, ctx)
 	if err != nil {
 		return res, err
@@ -67,14 +67,14 @@ func (a *AuthService) CustomerToken (username string, password string, ctx conte
 	return res, nil
 }
 
-func (a *AuthService) AdminWithGoogleAuthenticator (username string, password string, otp string) {
-// TODO:
+func (a *AuthService) AdminWithGoogleAuthenticator(username string, password string, otp string) {
+	// TODO:
 }
 
-func (a *AuthService) AdminWithAuthy (username string, password string, otp string) {
-// TODO:
+func (a *AuthService) AdminWithAuthy(username string, password string, otp string) {
+	// TODO:
 }
 
-func (a *AuthService) AdminWithU2fKey (username string, password string, otp string) {
+func (a *AuthService) AdminWithU2fKey(username string, password string, otp string) {
 	// TODO:
 }

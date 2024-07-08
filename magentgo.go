@@ -12,17 +12,17 @@ import (
 )
 
 type Client struct {
-	apiBaseUrl string
+	apiBaseUrl             string
 	client                 *http.Client
 	clientConfigValidators []ClientConfigValidationFunc
-	baseUrl     string
-	bearerToken string
-	// defaults to 
+	baseUrl                string
+	bearerToken            string
+	// defaults to
 	storeCode string
 	// defaults to 1
 	version int
 
-	AuthService *AuthService
+	AuthService    *AuthService
 	ProductService *ProductService
 }
 
@@ -32,7 +32,7 @@ func New(options ...OptionFunc) (*Client, error) {
 		client:      &http.Client{},
 		baseUrl:     "",
 		bearerToken: "",
-		storeCode: "",
+		storeCode:   "",
 		version:     1,
 	}
 
@@ -132,14 +132,23 @@ func (c *Client) setVersion(version int) error {
 }
 
 // make http request from the client. Attempts to marshal against type struct, returns raw result as byte slice
-func (c *Client) call(endpoint string, httpVerb string, bodyType interface{}, responseType interface{}, ctx context.Context) ([]byte, error) {
+func (c *Client) call(endpoint string, httpVerb string, bodyType any, responseType any, ctx context.Context) ([]byte, error) {
+	var marshalled []byte
+	var err error
 	requestUrl := fmt.Sprintf("%s%s", c.apiBaseUrl, endpoint)
 
 	fmt.Println(requestUrl)
 
-	marshalled, err := json.Marshal(&bodyType)
-	if err != nil {
-		return nil, err
+	str, ok := bodyType.(string)
+	if ok {
+		marshalled = []byte(str)
+	}
+
+	if len(marshalled) == 0 {
+		marshalled, err = json.Marshal(&bodyType)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	req, err := http.NewRequestWithContext(ctx, httpVerb, requestUrl, bytes.NewReader(marshalled))
@@ -148,7 +157,7 @@ func (c *Client) call(endpoint string, httpVerb string, bodyType interface{}, re
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer " + c.bearerToken)
+	req.Header.Set("Authorization", "Bearer "+c.bearerToken)
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -156,14 +165,16 @@ func (c *Client) call(endpoint string, httpVerb string, bodyType interface{}, re
 	}
 	defer res.Body.Close()
 
-	body, err := io.ReadAll(res.Body)	
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, err;
+		return nil, err
 	}
 
-	err = json.Unmarshal(body, responseType)
-	if err != nil {
-		return body, err
+	if responseType != nil {
+		err = json.Unmarshal(body, responseType)
+		if err != nil {
+			return body, err
+		}
 	}
 
 	return body, nil

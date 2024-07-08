@@ -61,7 +61,7 @@ type ProductResponse struct {
 	TierPrices          []any `json:"tier_prices"`
 	CustomAttributes    []struct {
 		AttributeCode string `json:"attribute_code"`
-		Value         any `json:"value"`
+		Value         any    `json:"value"`
 	} `json:"custom_attributes"`
 }
 
@@ -70,7 +70,7 @@ func (p *ProductService) GetBySku(sku string, ctx context.Context) (ProductRespo
 	productResponse := &ProductResponse{}
 	_, err := p.client.call(fmt.Sprintf("products/%s", sku), "GET", nil, productResponse, ctx)
 	if err != nil {
-		return *productResponse, err;
+		return *productResponse, err
 	}
 
 	return *productResponse, nil
@@ -81,7 +81,7 @@ func (p *ProductService) GetById(id int, ctx context.Context) (ProductResponse, 
 	productResponse := &ProductResponse{}
 	_, err := p.client.call(fmt.Sprintf("products/id/%d", id), "GET", nil, productResponse, ctx)
 	if err != nil {
-		return *productResponse, err;
+		return *productResponse, err
 	}
 
 	return *productResponse, nil
@@ -94,5 +94,5 @@ func (p *ProductService) GetById(id int, ctx context.Context) (ProductResponse, 
 // 		return *productResponse, err;
 // 	}
 
-// 	return *productResponse, nil	
+// 	return *productResponse, nil
 // }

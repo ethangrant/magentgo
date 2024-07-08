@@ -7,27 +7,27 @@ import (
 
 type SearchCriteria struct {
 	filterGroups []FilterGroup
-	sortOrders []SortOrder
-	pageSize int
-	currentPage int
+	sortOrders   []SortOrder
+	pageSize     int
+	currentPage  int
 }
 
 type SortOrder struct {
-	field string
+	field     string
 	direction string
 }
 
-type FilterGroup struct{
+type FilterGroup struct {
 	filters []Filter
 }
 
 type Filter struct {
-	field string
-	value string
+	field         string
+	value         string
 	conditionType string
 }
 
-type SearchCriteriaBuilder struct{
+type SearchCriteriaBuilder struct {
 	searchCriteria *SearchCriteria
 }
 
@@ -37,8 +37,8 @@ func NewSortOrder(field string, direction string) SortOrder {
 
 func NewFilter(field string, value string, conditionType string) Filter {
 	return Filter{
-		field: field,
-		value: value,
+		field:         field,
+		value:         value,
 		conditionType: conditionType,
 	}
 }
@@ -82,9 +82,9 @@ func (s *SearchCriteriaBuilder) build() string {
 			value := fmt.Sprintf("[filters][%d][value]=%s&", index, filter.value)
 			conditionType := fmt.Sprintf("[filters][%d][condition_type]=%s&", index, filter.conditionType)
 
-			query += groupString + field;
-			query += groupString + value;
-			query += groupString + conditionType;
+			query += groupString + field
+			query += groupString + value
+			query += groupString + conditionType
 		}
 	}
 
@@ -92,7 +92,7 @@ func (s *SearchCriteriaBuilder) build() string {
 		query += fmt.Sprintf("searchCriteria[sortOrders][%d][field]=%s&", index, order.field)
 		query += fmt.Sprintf("searchCriteria[sortOrders][%d][direction]=%s&", index, order.direction)
 	}
-	
+
 	if s.searchCriteria.pageSize > 0 {
 		query += fmt.Sprintf("searchCriteria[pageSize]=%d&", s.searchCriteria.pageSize)
 	}

@@ -14,15 +14,15 @@ func main() {
 	)
 	if err != nil {
 		fmt.Println(err.Error())
-		return;
+		return
 	}
 
-	ctx := context.Background();
+	ctx := context.Background()
 
 	_, err = magentgoClient.AuthService.AdminToken("admin", "admin123", ctx)
 	if err != nil {
 		fmt.Println(err.Error())
-		return;
+		return
 	}
 
 	res, err := magentgoClient.ProductService.GetBySku("MG0041587", ctx)

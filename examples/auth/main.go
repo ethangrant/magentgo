@@ -15,10 +15,9 @@ func main() {
 		magentgo.WithStoreCode("all"),
 		magentgo.WithVersion(1),
 	)
-	if err !=nil {
+	if err != nil {
 		fmt.Println(err.Error())
 	}
-
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)

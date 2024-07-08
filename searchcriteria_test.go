@@ -43,7 +43,7 @@ func TestBuild(t *testing.T) {
 	if actual1 != expected1 {
 		t.Errorf("expected searchcriteria %s, got %s", expected1, actual1)
 	}
-	
+
 	if actual2 != expected2 {
 		t.Errorf("expected searchcriteria %s, got %s", expected2, actual2)
 	}

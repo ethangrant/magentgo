@@ -48,29 +48,29 @@ func TestValidate(t *testing.T) {
 }
 
 func TestSetBaseUrl(t *testing.T) {
-	tests := []struct{
-		name string
-		url string
+	tests := []struct {
+		name            string
+		url             string
 		expectedBaseUrl string
-		expectedErr error
-	} {
+		expectedErr     error
+	}{
 		{
-			name: "valid base url",
-			url: "https://www.magento2store.co.uk/",
+			name:            "valid base url",
+			url:             "https://www.magento2store.co.uk/",
 			expectedBaseUrl: "https://www.magento2store.co.uk/",
-			expectedErr: nil,
+			expectedErr:     nil,
 		},
 		{
-			name: "base url no trailing slash",
-			url: "https://www.magento2store.co.uk",
+			name:            "base url no trailing slash",
+			url:             "https://www.magento2store.co.uk",
 			expectedBaseUrl: "https://www.magento2store.co.uk/",
-			expectedErr: nil,
+			expectedErr:     nil,
 		},
 		{
-			name: "invalid base url",
-			url: "invalidbaseurl.co",
+			name:            "invalid base url",
+			url:             "invalidbaseurl.co",
 			expectedBaseUrl: "",
-			expectedErr: errors.New("base URL is invalid"),
+			expectedErr:     errors.New("base URL is invalid"),
 		},
 	}
 
@@ -98,11 +98,11 @@ func TestSetBaseUrl(t *testing.T) {
 }
 
 func TestSetApiBaseUrl(t *testing.T) {
-	tests := []struct{
-		name string
-		client *Client
+	tests := []struct {
+		name        string
+		client      *Client
 		expectedUrl string
-	} {
+	}{
 		{
 			name: "valid base url",
 			client: &Client{
@@ -110,7 +110,7 @@ func TestSetApiBaseUrl(t *testing.T) {
 				baseUrl:     "https://magento2store.co.uk/",
 				bearerToken: "somebearertoken",
 				version:     1,
-				storeCode: "all",
+				storeCode:   "all",
 			},
 			expectedUrl: "https://magento2store.co.uk/rest/all/V1/",
 		},
@@ -121,7 +121,7 @@ func TestSetApiBaseUrl(t *testing.T) {
 				baseUrl:     "https://www.magento2store.co.uk/",
 				bearerToken: "somebearertoken",
 				version:     1,
-				storeCode: "uk",
+				storeCode:   "uk",
 			},
 			expectedUrl: "https://www.magento2store.co.uk/rest/uk/V1/",
 		},
