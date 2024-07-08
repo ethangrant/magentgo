@@ -204,7 +204,7 @@ func (c *Client) newRequest(ctx context.Context, verb string, url string, reader
 // implement request headers
 func (c *Client) setRequestHeaders(req *http.Request, token string) *Client {
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer " + token)
+	req.Header.Set("Authorization", "Bearer "+token)
 
 	return c
 }
