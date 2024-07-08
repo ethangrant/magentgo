@@ -41,5 +41,5 @@ func main() {
 
 	fmt.Println(res)
 
-	
+	// res, err = magentgoClient.ProductService.
 }

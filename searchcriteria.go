@@ -7,8 +7,14 @@ import (
 
 type SearchCriteria struct {
 	filterGroups []FilterGroup
+	sortOrders []SortOrder
 	pageSize int
 	currentPage int
+}
+
+type SortOrder struct {
+	field string
+	direction string
 }
 
 type FilterGroup struct{
@@ -25,7 +31,9 @@ type SearchCriteriaBuilder struct{
 	searchCriteria *SearchCriteria
 }
 
-// TODO: addFilter, AddFilter group etc
+func NewSortOrder(field string, direction string) SortOrder {
+	return SortOrder{field: field, direction: direction}
+}
 
 func NewFilter(field string, value string, conditionType string) Filter {
 	return Filter{
@@ -41,6 +49,11 @@ func NewFilterGroup(filters []Filter) FilterGroup {
 
 func NewSearchCriteriaBuilder() *SearchCriteriaBuilder {
 	return &SearchCriteriaBuilder{searchCriteria: &SearchCriteria{}}
+}
+
+func (s *SearchCriteriaBuilder) addSortOrder(sortOrder SortOrder) *SearchCriteriaBuilder {
+	s.searchCriteria.sortOrders = append(s.searchCriteria.sortOrders, sortOrder)
+	return s
 }
 
 func (s *SearchCriteriaBuilder) addFilterGroup(filterGroup FilterGroup) *SearchCriteriaBuilder {
@@ -73,6 +86,19 @@ func (s *SearchCriteriaBuilder) build() string {
 			query += groupString + value;
 			query += groupString + conditionType;
 		}
+	}
+
+	for index, order := range s.searchCriteria.sortOrders {
+		query += fmt.Sprintf("searchCriteria[sortOrders][%d][field]=%s&", index, order.field)
+		query += fmt.Sprintf("searchCriteria[sortOrders][%d][direction]=%s&", index, order.direction)
+	}
+	
+	if s.searchCriteria.pageSize > 0 {
+		query += fmt.Sprintf("searchCriteria[pageSize]=%d&", s.searchCriteria.pageSize)
+	}
+
+	if s.searchCriteria.currentPage > 0 {
+		query += fmt.Sprintf("searchCriteria[currentPage]=%d&", s.searchCriteria.currentPage)
 	}
 
 	return strings.TrimSuffix(query, "&")

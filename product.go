@@ -88,5 +88,11 @@ func (p *ProductService) GetById(id int, ctx context.Context) (ProductResponse, 
 }
 
 // func (p *ProductService) getProducts(searchCriteria string) ([]ProductResponse, error) {
-// 	// TODO: Implement search criteria builder
+// 	productResponse := &ProductResponse{}
+// 	_, err := p.client.call(fmt.Sprintf("products/id/%d", id), "GET", nil, productResponse, ctx)
+// 	if err != nil {
+// 		return *productResponse, err;
+// 	}
+
+// 	return *productResponse, nil	
 // }
