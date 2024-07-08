@@ -9,13 +9,17 @@ type ProductService struct {
 	client *Client
 }
 
+type ProductsResponse struct {
+	Products []ProductResponse `json:"items"`
+}
+
 type ProductResponse struct {
 	ErrorResponse
 	ID                  int    `json:"id"`
 	Sku                 string `json:"sku"`
 	Name                string `json:"name"`
 	AttributeSetID      int    `json:"attribute_set_id"`
-	Price               int    `json:"price"`
+	Price               float32    `json:"price"`
 	Status              int    `json:"status"`
 	Visibility          int    `json:"visibility"`
 	TypeID              string `json:"type_id"`
@@ -63,6 +67,12 @@ type ProductResponse struct {
 		AttributeCode string `json:"attribute_code"`
 		Value         any    `json:"value"`
 	} `json:"custom_attributes"`
+	SearchCriteria struct {
+		FilterGroups []any `json:"filter_groups"`
+		PageSize     int   `json:"page_size"`
+		CurrentPage  int   `json:"current_page"`
+	} `json:"search_criteria"`
+	TotalCount int `json:"total_count"`
 }
 
 // request single product by sku
@@ -87,12 +97,13 @@ func (p *ProductService) GetById(id int, ctx context.Context) (ProductResponse, 
 	return *productResponse, nil
 }
 
-// func (p *ProductService) getProducts(searchCriteria string) ([]ProductResponse, error) {
-// 	productResponse := &ProductResponse{}
-// 	_, err := p.client.call(fmt.Sprintf("products/id/%d", id), "GET", nil, productResponse, ctx)
-// 	if err != nil {
-// 		return *productResponse, err;
-// 	}
+// get list of products based on search criteria
+func (p *ProductService) GetProducts(searchCriteria string, ctx context.Context) (ProductsResponse, error) {
+	productsResponse := &ProductsResponse{}
+	_, err := p.client.call(fmt.Sprintf("products?%s", searchCriteria), "GET", nil, productsResponse, ctx)
+	if err != nil {
+		return *productsResponse, err;
+	}
 
-// 	return *productResponse, nil
-// }
+	return *productsResponse, nil
+}

@@ -6,7 +6,6 @@ import (
 
 // TODO: refactor testing process
 func TestBuild(t *testing.T) {
-
 	// test case 1
 	expected1 := "searchCriteria[filter_groups][0][filters][0][field]=sku&searchCriteria[filter_groups][0][filters][0][value]=WSH%29%&searchCriteria[filter_groups][0][filters][0][condition_type]=like&searchCriteria[filter_groups][0][filters][1][field]=sku&searchCriteria[filter_groups][0][filters][1][value]=WP%29%&searchCriteria[filter_groups][0][filters][1][condition_type]=like&searchCriteria[filter_groups][1][filters][0][field]=price&searchCriteria[filter_groups][1][filters][0][value]=40&searchCriteria[filter_groups][1][filters][0][condition_type]=from&searchCriteria[filter_groups][2][filters][0][field]=price&searchCriteria[filter_groups][2][filters][0][value]=49.99&searchCriteria[filter_groups][2][filters][0][condition_type]=to"
 	searchCriteriaBuilder := NewSearchCriteriaBuilder()
@@ -24,11 +23,11 @@ func TestBuild(t *testing.T) {
 	filters3 = append(filters3, NewFilter("price", "49.99", "to"))
 	filterGroup3 := NewFilterGroup(filters3)
 
-	searchCriteriaBuilder.addFilterGroup(filterGroup1)
-	searchCriteriaBuilder.addFilterGroup(filterGroup2)
-	searchCriteriaBuilder.addFilterGroup(filterGroup3)
+	searchCriteriaBuilder.AddFilterGroup(filterGroup1)
+	searchCriteriaBuilder.AddFilterGroup(filterGroup2)
+	searchCriteriaBuilder.AddFilterGroup(filterGroup3)
 
-	actual1 := searchCriteriaBuilder.build()
+	actual1 := searchCriteriaBuilder.Build()
 
 	// test case 2
 	expected2 := "searchCriteria[filter_groups][0][filters][0][field]=sku&searchCriteria[filter_groups][0][filters][0][value]=MGTI&searchCriteria[filter_groups][0][filters][0][condition_type]=eq&searchCriteria[sortOrders][0][field]=price&searchCriteria[sortOrders][0][direction]=asc&searchCriteria[pageSize]=100&searchCriteria[currentPage]=10"
@@ -36,9 +35,9 @@ func TestBuild(t *testing.T) {
 	var filters4 []Filter
 	filters4 = append(filters4, NewFilter("sku", "MGTI", "eq"))
 	filterGroup4 := NewFilterGroup(filters4)
-	searchCriteriaBuilder.addFilterGroup(filterGroup4).addSortOrder(NewSortOrder("price", "asc")).setCurrentPage(10).setPageSize(100)
+	searchCriteriaBuilder.AddFilterGroup(filterGroup4).AddSortOrder(NewSortOrder("price", "asc")).SetCurrentPage(10).SetPageSize(100)
 
-	actual2 := searchCriteriaBuilder.build()
+	actual2 := searchCriteriaBuilder.Build()
 
 	if actual1 != expected1 {
 		t.Errorf("expected searchcriteria %s, got %s", expected1, actual1)

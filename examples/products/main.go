@@ -41,5 +41,13 @@ func main() {
 
 	fmt.Println(res)
 
-	// res, err = magentgoClient.ProductService.
+	searchCriteriaBuilder := magentgo.NewSearchCriteriaBuilder()
+	searchCriteriaBuilder.SetPageSize(10)
+	products, err := magentgoClient.ProductService.GetProducts(searchCriteriaBuilder.Build(), ctx)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	fmt.Println(products)
 }

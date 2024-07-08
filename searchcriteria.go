@@ -51,28 +51,28 @@ func NewSearchCriteriaBuilder() *SearchCriteriaBuilder {
 	return &SearchCriteriaBuilder{searchCriteria: &SearchCriteria{}}
 }
 
-func (s *SearchCriteriaBuilder) addSortOrder(sortOrder SortOrder) *SearchCriteriaBuilder {
+func (s *SearchCriteriaBuilder) AddSortOrder(sortOrder SortOrder) *SearchCriteriaBuilder {
 	s.searchCriteria.sortOrders = append(s.searchCriteria.sortOrders, sortOrder)
 	return s
 }
 
-func (s *SearchCriteriaBuilder) addFilterGroup(filterGroup FilterGroup) *SearchCriteriaBuilder {
+func (s *SearchCriteriaBuilder) AddFilterGroup(filterGroup FilterGroup) *SearchCriteriaBuilder {
 	s.searchCriteria.filterGroups = append(s.searchCriteria.filterGroups, filterGroup)
 	return s
 }
 
-func (s *SearchCriteriaBuilder) setPageSize(size int) *SearchCriteriaBuilder {
+func (s *SearchCriteriaBuilder) SetPageSize(size int) *SearchCriteriaBuilder {
 	s.searchCriteria.pageSize = size
 	return s
 }
 
-func (s *SearchCriteriaBuilder) setCurrentPage(page int) *SearchCriteriaBuilder {
+func (s *SearchCriteriaBuilder) SetCurrentPage(page int) *SearchCriteriaBuilder {
 	s.searchCriteria.currentPage = page
 	return s
 }
 
 // creates a query string of searchCriteria params see https://developer.adobe.com/commerce/webapi/rest/use-rest/performing-searches/
-func (s *SearchCriteriaBuilder) build() string {
+func (s *SearchCriteriaBuilder) Build() string {
 	var query string
 
 	for index, group := range s.searchCriteria.filterGroups {
