@@ -107,3 +107,24 @@ func (p *ProductService) GetProducts(searchCriteria string, ctx context.Context)
 
 	return *productsResponse, nil
 }
+
+// TODO: test this
+func (p *ProductService) UpdateProduct(sku string, product ProductResponse, ctx context.Context) (ProductResponse, error) {
+	productResponse := &ProductResponse{}
+	_, err := p.client.call(fmt.Sprintf("products/%s", sku), "PUT", product, productResponse, ctx)
+	if err != nil {
+		return *productResponse, err
+	}
+
+	return *productResponse, nil
+}
+
+// TODO: test this
+func (p *ProductService) DeleteProduct(sku string, ctx context.Context) ([]byte, error) {
+	res, err := p.client.call(fmt.Sprintf("products/%s", sku), "DELETE", nil, nil, ctx)
+	if err != nil {
+		return res, err
+	}
+
+	return res, nil
+}
